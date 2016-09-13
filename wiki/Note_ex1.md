@@ -21,8 +21,6 @@ require 'open-uri'
 也不過就算你已經裝了再下一次`gem install nokogiri`，其實也沒差
 
 `open-uri`是ruby的一個module，直接require即可
-
-出處：
   + [Unable to bundle install 'open-uri'](http://stackoverflow.com/questions/20544662/unable-to-bundle-install-open-uri) )
   + [我抓網頁資料的方法(使用 Ruby)](http://blog.ericsk.org/archives/732)  
 
@@ -177,5 +175,20 @@ p  doc.xpath("//h3/a")[1]
 
 則會印出
 ```
-#<Nokogiri::XML::Element:0x3fe884a43e98 name="a" attributes=[#<Nokogiri::XML::Attr:0x3fe884a43e0c name="href" value="www.yahoo.com">] children=[#<Nokogiri::XML::Text:0x3fe884a43984 " yahoo web site ">]>
+#<Nokogiri::XML::Element:0x3fe884a43e98 name="a"
+attributes=[#<Nokogiri::XML::Attr:0x3fe884a43e0c name="href" value="www.yahoo.com">]
+children=[#<Nokogiri::XML::Text:0x3fe884a43984 " yahoo web site ">]>
 ```
+
+看來用`p`可以得到非常完整的資訊，估狗一下原來在Ruby用`p`會得到完整的資訊
+  + [p vs puts in Ruby](http://stackoverflow.com/questions/1255324/p-vs-puts-in-ruby)
+
+##### 取出 Tag 的屬性
+
+fix `example/ex1/noko.rb`
+```
+p doc.xpath("//h3/img")[1]['src']
+p doc.xpath("//h3/a")[0]['href']
+```
+
+##### 使用//來找出某種特定屬性
