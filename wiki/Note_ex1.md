@@ -5,7 +5,7 @@
 路徑： `ezparser/examples/ex1`
 
 
-### Step.1
+### 使用Nokogiri
 
 create `example/ex1/noko.rb`
 
@@ -107,7 +107,7 @@ print  doc.xpath("//h1")[1]
 
 ##### 取出所有 < H3 > 標籤下面的 < img >
 
-fix `example/ex1/noko.rb`
+fix `example/ex1/noko.rb`，然後irb下指令
 ```
 ...
 ...
@@ -116,4 +116,26 @@ fix `example/ex1/noko.rb`
 doc = Nokogiri::HTML( htmlData )
 
 puts  doc.xpath("//h3/img")
+```
+
+
+##### 取出所有 < H3 > 標籤下面 < a > 的文字
+
+fix `example/ex1/noko.rb`，然後irb下指令
+```
+...
+...
+...
+
+doc = Nokogiri::HTML( htmlData )
+
+puts  doc.xpath("//h3/a").text
+```
+
+
+##### 指定 item [1] 的 text
+
+fix `example/ex1/noko.rb`，然後irb下指令
+```
+puts  doc.xpath("//h3/a")[1].text
 ```

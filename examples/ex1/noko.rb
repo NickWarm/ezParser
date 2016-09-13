@@ -22,4 +22,4 @@ htmlData = "
 "
 doc = Nokogiri::HTML( htmlData )
 
-puts  doc.xpath("//h3/img") 
+puts  doc.xpath("//h3/a")[1].text
