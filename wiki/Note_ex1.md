@@ -69,3 +69,17 @@ ezparser/examples/ex1
 
 ruby noko.rb
 ```
+
+##### 找出所有 < h1 > 標籤的值
+
+fix `example/ex1/noko.rb`
+```
+...
+...
+...
+
+doc = Nokogiri::HTML( htmlData )
+
+puts  doc.xpath("//h1")   
+
+```
