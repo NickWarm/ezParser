@@ -139,3 +139,43 @@ fix `example/ex1/noko.rb`，然後irb下指令
 ```
 puts  doc.xpath("//h3/a")[1].text
 ```
+##### to_html
+
+老實說我不知這有什麼差別
+
+fix `example/ex1/noko.rb`
+
+from
+
+```
+puts  doc.xpath("//h3/a")[1]
+```
+
+to
+
+```
+puts  doc.xpath("//h3/a")[1]to_html
+```
+
+但是跑出來的結果一樣
+
+無聊測試了一下這篇的寫法
+```
+p  doc.xpath("//h3/a")[1].to_html
+```
+
+會印出
+```
+"<a href=\"www.yahoo.com\"> yahoo web site </a>"
+```
+跟以往相比，多了`" "`
+
+若是寫
+```
+p  doc.xpath("//h3/a")[1]
+```
+
+則會印出
+```
+#<Nokogiri::XML::Element:0x3fe884a43e98 name="a" attributes=[#<Nokogiri::XML::Attr:0x3fe884a43e0c name="href" value="www.yahoo.com">] children=[#<Nokogiri::XML::Text:0x3fe884a43984 " yahoo web site ">]>
+```
