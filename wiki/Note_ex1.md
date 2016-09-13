@@ -219,3 +219,18 @@ puts doc.xpath("//@id")
 這個寫法是找整個HTML結構，有該屬性的就印出來，用`p`寫會印出很完整的資訊，想看少一點就用`print`或`puts`
 
 ##### 找出特定 id or class 的 tag
+
+div 標籤通常會有 id 或 class 屬性，我們可以取出**擁有特定屬性的tag**
+
+ex： 取出擁有`class="div_1"`的`div`
+
+fix `example/ex1/noko.rb`
+```
+puts doc.xpath("//div[@class='div_1']")
+
+p doc.xpath("//div[@class='div_1']")
+
+puts doc.xpath("//body[@id='story_body']")
+```
+
+實際測試後，我較偏好用`puts`而非`p`，`p`的資訊太完整了，閱讀較困難

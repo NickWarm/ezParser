@@ -22,4 +22,8 @@ htmlData = "
 "
 doc = Nokogiri::HTML( htmlData )
 
-puts doc.xpath("//div[@id]")
+puts doc.xpath("//div[@class='div_1']")
+
+p doc.xpath("//div[@class='div_1']")
+
+puts doc.xpath("//body[@id='story_body']")
