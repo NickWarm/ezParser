@@ -234,3 +234,5 @@ puts doc.xpath("//body[@id='story_body']")
 ```
 
 實際測試後，我較偏好用`puts`而非`p`，`p`的資訊太完整了，閱讀較困難
+
+# ex1 結束 ^_^
