@@ -81,5 +81,28 @@ fix `example/ex1/noko.rb`
 doc = Nokogiri::HTML( htmlData )
 
 puts  doc.xpath("//h1")   
-
 ```
+
+一樣irb下指令，就能看到兩行`h1` tag
+```
+ezparser/examples/ex1
+
+ruby noko.rb
+```
+
+其中 `//` 線代表"全部"的意思，使用 `//` 回傳的是一個**集合體**，所以可以用陣列的方式取值
+
+fix `example/ex1/noko.rb`
+```
+...
+...
+...
+
+doc = Nokogiri::HTML( htmlData )
+
+print  doc.xpath("//h1")[1]   
+```
+
+然後irb下指令，應該就能看到`<h1> test h1-2 </h1>`。
+
+#####
