@@ -3,7 +3,7 @@ require 'open-uri'
 
 htmlData = "
 <html>
-	<title> This is a simple html </title>
+	<title id= 'title'> This is a simple html </title>
 	<body id='story_body'>
 		<h2> this is h2 in story_body </h2>
 	</body>
@@ -22,4 +22,4 @@ htmlData = "
 "
 doc = Nokogiri::HTML( htmlData )
 
-p doc.xpath("//@class")
+puts doc.xpath("//@id")

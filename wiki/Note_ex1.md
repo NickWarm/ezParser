@@ -192,3 +192,30 @@ p doc.xpath("//h3/a")[0]['href']
 ```
 
 ##### 使用//來找出某種特定屬性
+
+fix `example/ex1/noko.rb`
+```
+p doc.xpath("//@class")
+puts doc.xpath("//@src")
+```
+
+fix `example/ex1/noko.rb`
+```
+require 'nokogiri'
+require 'open-uri'
+
+htmlData = "
+<html>
+	<title id= 'title'> This is a simple html </title>
+	<body id='story_body'>
+  ...
+  ...
+  ...
+</html>
+
+puts doc.xpath("//@id")
+```
+
+這個寫法是找整個HTML結構，有該屬性的就印出來，用`p`寫會印出很完整的資訊，想看少一點就用`print`或`puts`
+
+##### 
