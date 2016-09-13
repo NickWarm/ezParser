@@ -4,7 +4,7 @@
 
 路徑： `ezparser/examples/ex2`
 
-## 範例二：爬博客來的每日六六折，印出該網址的書名
+## 範例2：爬博客來的每日六六折，印出該網址的書名
 
 在這範例中，我們去爬[博客來的每日六六折](http://www.books.com.tw/activity/gold66_day/?loc=activity_BK_001)
 
@@ -58,7 +58,7 @@ books.css('div h1 a').each do |a|
 end
 ```
 
-> 這邊的`books.css`這寫法，你可以參照[Nokogiri Tutorials](http://www.nokogiri.org)的[Searching an HTML / XML Document](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)這一篇的**Basic Searching**這節。`content`請參考[Modifying an HTML / XML Document](http://www.nokogiri.org/tutorials/modifying_an_html_xml_document.html)的**Changing text contents**會比較易懂。
+> 這邊的`books.css`這寫法，你可以參照[Nokogiri Tutorials](http://www.nokogiri.org)的[Searching an HTML / XML Document](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)這一篇的**Basic Searching**這節，想看更多例子可以參照[Parsing HTML with Nokogiri](http://ruby.bastardsbook.com/chapters/html-parsing/)的**Nokogiri and CSS selectors**這節。`content`請參考[Modifying an HTML / XML Document](http://www.nokogiri.org/tutorials/modifying_an_html_xml_document.html)的**Changing text contents**會比較易懂。
 
 最後成功印出
 ```
@@ -141,3 +141,5 @@ ruby carlo.rb
 
 威利在哪裡？3：奇幻大冒險（暢銷修訂版）
 ```
+
+> 除了`css`與`xpath`之外，你也可以用`search`。請參考[Nokogiri wiki](https://github.com/sparklemotion/nokogiri/wiki)的**Quick start to parsing HTML**這節。不過我個人是不太喜歡`search`，因為網路上的範例太少了。此外這節的第一個範例教你爬google搜尋的不要做，因為根本爬不出東西出來。
