@@ -191,7 +191,7 @@ p doc.xpath("//h3/img")[1]['src']
 p doc.xpath("//h3/a")[0]['href']
 ```
 
-##### 使用//來找出某種特定屬性
+##### 使用`//`來找出某種特定屬性
 
 fix `example/ex1/noko.rb`
 ```
@@ -218,4 +218,4 @@ puts doc.xpath("//@id")
 
 這個寫法是找整個HTML結構，有該屬性的就印出來，用`p`寫會印出很完整的資訊，想看少一點就用`print`或`puts`
 
-##### 
+##### 找出特定 id or class 的 tag
