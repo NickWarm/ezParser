@@ -105,4 +105,15 @@ print  doc.xpath("//h1")[1]
 
 然後irb下指令，應該就能看到`<h1> test h1-2 </h1>`。
 
-#####
+##### 取出所有 < H3 > 標籤下面的 < img >
+
+fix `example/ex1/noko.rb`
+```
+...
+...
+...
+
+doc = Nokogiri::HTML( htmlData )
+
+puts  doc.xpath("//h3/img")
+```
