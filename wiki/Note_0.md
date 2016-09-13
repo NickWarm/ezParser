@@ -3,6 +3,7 @@
 1. [Nokogiri 教學、簡介 | 艾瑞克王](http://wwssllabcd.github.io/blog/2012/10/25/how-to-use-nokogiri/)
 
 2. [爬蟲系列文 - Ruby爬蟲初探 « Carlos' notes](http://carlos-blog.logdown.com/posts/2016/06/10/reptile-series-approach)
+ + [Nokogiri Tutorials](http://www.nokogiri.org)
 
 3. [Quick start to parsing HTML](https://github.com/sparklemotion/nokogiri/wiki)
 

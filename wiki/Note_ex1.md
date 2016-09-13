@@ -191,7 +191,7 @@ p doc.xpath("//h3/img")[1]['src']
 p doc.xpath("//h3/a")[0]['href']
 ```
 
-##### 使用`//`來找出某種特定屬性
+##### 使用`@`來找出某種特定屬性
 
 fix `example/ex1/noko.rb`
 ```
@@ -216,9 +216,14 @@ htmlData = "
 puts doc.xpath("//@id")
 ```
 
+fix `example/ex1/noko.rb`
+```
+puts doc.xpath("//@src")
+```
+
 這個寫法是找整個HTML結構，有該屬性的就印出來，用`p`寫會印出很完整的資訊，想看少一點就用`print`或`puts`
 
-##### 找出特定 id or class 的 tag
+##### 找出「tag擁有特定 id or class」
 
 div 標籤通常會有 id 或 class 屬性，我們可以取出**擁有特定屬性的tag**
 
@@ -234,5 +239,20 @@ puts doc.xpath("//body[@id='story_body']")
 ```
 
 實際測試後，我較偏好用`puts`而非`p`，`p`的資訊太完整了，閱讀較困難
+
+### 結論
+
+*  要先require `nokogiri`與 `open-uri`
+*  透過`Nokogiri::HTML()`來讀網址
+*  透過`doc.xpath("...")`來搜尋我們要的東西，`"..."`裡面如果是
+    + `//` 搜尋全部。ex: `//h1`、`//div`                        
+    + `xpath("//tag")[number]`取得特定tag。ex: `doc.xpath("//h1")[1]`
+    + `//tag/child`搜尋child element。ex: `//h3/img`
+    + `xpath("...").text`，取得element下的文字。ex:`doc.xpath("//h3/a").text`
+    + `xpath("...")[attribute]`取得tag的屬性。ex: `doc.xpath("//h3/img")[1]['src']`
+    + `@`找出特定屬性。ex: `doc.xpath("//@class")`
+    + `"//tag[@attr='SomeAttritube']"`找出「哪些tag擁有特定屬性」。ex：`doc.xpath("//div[@class='div_1']")`
+*  透過`p`、`puts`、`print`印出我們要的東西
+*  `p`可印出全部的資訊方便除錯。缺點：資訊太多。改進放法：結尾使用`to_html`
 
 # ex1 結束 ^_^
