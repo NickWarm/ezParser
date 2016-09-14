@@ -1,4 +1,4 @@
-# 學習順序
+# 學習資源
 
 
 #### 基礎
@@ -13,13 +13,15 @@
 4. [爬ezprice](https://hackpad.com/Railsfun-0907-fzkwOww6RXq#:h=ezprice)
 
 
+#### 大量爬蟲練習
+
 
 #### 使用Regex
 5. [用 Ruby 做網頁爬蟲](http://mgleon08.github.io/blog/2016/02/07/ruby-crawler/)
 
 6. [ntust-news-parser : 台科大網站 - 新聞專區的 ruby 爬蟲範例](https://github.com/Yukaii/ntust-news-parser/blob/master/parser.rb)
 
-#### 大量爬蟲練習
+
 
 
 
