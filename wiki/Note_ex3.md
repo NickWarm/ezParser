@@ -1,8 +1,11 @@
 ## 資源
 
 臨摹：[第十一篇 - 第一次自幹爬蟲就上手 - 使用 Ruby  (Yukai Huang)](https://yukaii.tw/blog/2015/05/03/how-to-write-web-crawler-for-the-first-time-using-ruby/)
+  + [crawler-template: 一個爬蟲範本 ](https://github.com/Yukaii/crawler-template)
 
 路徑： `ezparser/examples/ex3`
+
+寫完這個範例後，[crawler-template: 一個爬蟲範本 ](https://github.com/Yukaii/crawler-template)這個爬蟲範本的架構就很好理解了。
 
 <br>
 ## 範例3：爬中正大學課程網站

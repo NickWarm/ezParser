@@ -8,21 +8,25 @@
 
 3. [第十一篇 - 第一次自幹爬蟲就上手 - 使用 Ruby  (Yukai Huang)](https://yukaii.tw/blog/2015/05/03/how-to-write-web-crawler-for-the-first-time-using-ruby/) (開始玩pry)
 
+  + [crawler-template: 一個爬蟲範本 ](https://github.com/Yukaii/crawler-template) (這個用看的就好了)
+
+4. [爬ezprice](https://hackpad.com/Railsfun-0907-fzkwOww6RXq#:h=ezprice)
 
 
 
 #### 使用Regex
-1. [crawler-template: 一個爬蟲範本 ](https://github.com/Yukaii/crawler-template)
+1. [用 Ruby 做網頁爬蟲](http://mgleon08.github.io/blog/2016/02/07/ruby-crawler/)
 
-2. [用 Ruby 做網頁爬蟲](http://mgleon08.github.io/blog/2016/02/07/ruby-crawler/)
+2. [ntust-news-parser : 台科大網站 - 新聞專區的 ruby 爬蟲範例](https://github.com/Yukaii/ntust-news-parser/blob/master/parser.rb)
 
-3. [ntust-news-parser : 台科大網站 - 新聞專區的 ruby 爬蟲範例](https://github.com/Yukaii/ntust-news-parser/blob/master/parser.rb)
 
 
 #### 串到rails
-8. [寫一隻Ruby 檔案定時抓爬網頁資料 - 丹哥的技術培養皿](http://tech.guojheng-lin.com/posts/2015/12/03/write-a-ruby-file-regularly-to-catch-crawling-web-page-data/)
+1. [寫一隻Ruby 檔案定時抓爬網頁資料 - 丹哥的技術培養皿](http://tech.guojheng-lin.com/posts/2015/12/03/write-a-ruby-file-regularly-to-catch-crawling-web-page-data/)
 
-9. [Steven的教材：Railsfun 0907](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
+2. [Steven的教材：Railsfun 0907](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
+
+
 
 ##### Regular Expression推薦教材
 
