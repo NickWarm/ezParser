@@ -15,16 +15,18 @@
 
 
 #### 使用Regex
-1. [用 Ruby 做網頁爬蟲](http://mgleon08.github.io/blog/2016/02/07/ruby-crawler/)
+5. [用 Ruby 做網頁爬蟲](http://mgleon08.github.io/blog/2016/02/07/ruby-crawler/)
 
-2. [ntust-news-parser : 台科大網站 - 新聞專區的 ruby 爬蟲範例](https://github.com/Yukaii/ntust-news-parser/blob/master/parser.rb)
+6. [ntust-news-parser : 台科大網站 - 新聞專區的 ruby 爬蟲範例](https://github.com/Yukaii/ntust-news-parser/blob/master/parser.rb)
+
+#### 大量爬蟲練習
 
 
 
 #### 串到rails
-1. [寫一隻Ruby 檔案定時抓爬網頁資料 - 丹哥的技術培養皿](http://tech.guojheng-lin.com/posts/2015/12/03/write-a-ruby-file-regularly-to-catch-crawling-web-page-data/)
+7. [寫一隻Ruby 檔案定時抓爬網頁資料 - 丹哥的技術培養皿](http://tech.guojheng-lin.com/posts/2015/12/03/write-a-ruby-file-regularly-to-catch-crawling-web-page-data/)
 
-2. [Steven的教材：Railsfun 0907](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
+8. [Steven的教材：Railsfun 0907](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
 
 
 
