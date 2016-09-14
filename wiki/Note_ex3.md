@@ -78,17 +78,10 @@ pry(main)> doc = Nokogiri::HTML(str)
 
 這篇講Nokogiri的`css`由於前兩個範例已經碰過，在此就不贅述了，直接開始上code
 
-add to  `ezparser/examples/ex3/crawler.rb`
-
-
-完整code
-```
-
-```
 
 #####  設定要用到的gem
 
-我們用`nokogiri`來爬，`pry`來抓蟲，把爬出的結果存成`json`存到`course.json`
+我們用`nokogiri`來爬，`pry`來抓蟲，把爬出的結果存成`json`存到`courses.json`
 
 ```
 require 'Nokogiri'
@@ -101,7 +94,7 @@ require 'json'
 fix `ezparser/examples/ex3/crawler.rb`
 
 ```
-course = []
+courses = []
 ```
 
 接著我們用`Dir.glob`獲得`1031`資料夾下的所有`.html`檔吧
@@ -145,7 +138,7 @@ $ pry
 
 > 在我們的`examples/ex3`會用到的是`Dir.glob("*c")`：`Matches all files ending with c`
 
-##### 寫好爬table的每一列
+##### 爬table的每一列每一欄
 
 這邊我以`1031/1014.html`為例，為了方便閱讀，我把他稍微排版
 ```
@@ -228,10 +221,13 @@ end
 
 > Nokogiri的語法很像jQuery，為了方便解釋`:not`與`:first-child`，可以直接去看[jQuery:first-child Selector](https://api.jquery.com/first-child-selector/)與[jQuery:not](https://api.jquery.com/not-selector/)的範例code來幫助理解。
 
-##### 開始爬該列的每一個欄位
+##### 爬出來的資料存到courses這陣列裡
 
 fix `ezparser/examples/ex3/crawler.rb`
+
 ```
+courses = []
+
 Dir.glob('1031/*.html').each do |filename|
   str = File.read(filename)
   doc = Nokogiri::HTML(str.encode("utf-8", invalid: :replace, undef: :replace))
@@ -239,7 +235,7 @@ Dir.glob('1031/*.html').each do |filename|
   doc.css('table tr:not(:first-child)').each do |row|
     datas = row.css('td')
 
-    course << {
+    courses << {
       grades: datas[0] && datas[0].text,
       serial: datas[1] && datas[1].text,
       class_type: datas[2] && datas[2].text,
@@ -255,9 +251,11 @@ Dir.glob('1031/*.html').each do |filename|
 
   end
 end
+
+File.open('courses.json', 'w') {|file| file.write(JSON.pretty_generate(courses))}
 ```
 
-這樣寫會爬出什麼呢，讓我們再看一次這table的結構
+這樣寫爬出的資料會存哪些呢，讓我們再看一次這table的結構
 ```
 <TH><FONT size=3>年級</TH>
 <TH><FONT size=3>編號</TH>
@@ -277,12 +275,12 @@ end
 
 我們少了`[5]`、`[9]`，也就是說我們沒有爬**上課時數**、**上課地點**
 
-至於**課程大綱**為何要這樣爬
+至於**課程大綱**為何要這樣寫
 ```
 outline: datas[11] && datas[11].css('a')[0] && datas[11].css('a')[0][:href],
 ```
 
-我們只要把課程大綱那列的HTML的`td`結構稍作整理，就一目瞭然了
+我們只要把**課程大綱**那欄的HTML的`td`結構稍作整理，就一目瞭然了
 
 from
 
@@ -304,13 +302,29 @@ target=NEW>連結
 ```
 
 ###### <<
-> `course << { ... }`我是辜狗下`ruby double less`這關鍵字，找到[What does << mean in Ruby?](http://stackoverflow.com/questions/6852072/what-does-mean-in-ruby)這篇，然後查看[Array#<<](http://ruby-doc.org/core-2.3.1/Array.html#method-i-3C-3C)，才知道Ruby的Array有這樣串接的寫法，一樣去複製他的example code去pry跑會比較有感覺。
+> `courses << { ... }`我是辜狗下`ruby double less`這關鍵字，找到[What does << mean in Ruby?](http://stackoverflow.com/questions/6852072/what-does-mean-in-ruby)這篇，然後查看[Array#<<](http://ruby-doc.org/core-2.3.1/Array.html#method-i-3C-3C)，才知道Ruby的Array有這樣串接的寫法，一樣去複製他的example code去pry跑會比較有感覺。
 
-###### atas[1] && datas[1].text
+###### datas[1] && datas[1].text
 > 我們在`example/ex1`學過，若要指定 item [1] 的 text，可以寫
 ```
 doc.xpath("//h3/a")[1].text
 ```
 這邊的`datas[1] && datas[1].text`就是這概念
 
-##### 存到json去
+##### 存到外部檔案`courses.json`去
+
+fix `ezparser/examples/ex3/crawler.rb`
+
+```
+File.open('courses.json', 'w') {|file| file.write(JSON.pretty_generate(courses))}
+```
+
+然後在irb下指令
+```
+ezparser/examples/ex3 on master
+$ ruby crawler.rb
+```
+
+就會把爬出來的資料存到`courses.json`。經實測，不需要先建立`courses.json`，這段code會自動幫你生成該檔案
+
+# 結束 ^_^

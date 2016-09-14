@@ -11,7 +11,7 @@ Dir.glob('1031/*.html').each do |filename|
   doc.css('table tr:not(:first-child)').each do |row|
     datas = row.css('td')
 
-    course << {
+    courses << {
       grades: datas[0] && datas[0].text,
       serial: datas[1] && datas[1].text,
       class_type: datas[2] && datas[2].text,
