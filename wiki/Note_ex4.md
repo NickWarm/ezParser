@@ -10,6 +10,8 @@
 為了要跟前面的範例有連貫性，我爬的目標物與爬的寫法會跟範例的稍微不一樣，不過大同小異。
 
 先上完整的code
+
+方法一，圖片存於`ex4/original`
 ```
 require 'nokogiri'
 require 'open-uri'
@@ -30,6 +32,29 @@ temp_ans.each do |full_url|
   `wget #{full_url}`
 end
 ```
+
+方法二，圖片存於`ex4/neway`
+```
+require 'nokogiri'
+require 'open-uri'
+
+html = open("http://ezprice.com.tw/").read
+doc = Nokogiri::HTML(html)
+ans = []
+
+doc.css('p[@class=Midget_pic] a img').each do |img|
+  ans << img.attr('src')
+end
+
+temp_ans = ans.map do |url|
+  url if url.match(/^http/)
+end
+
+temp_ans.each do |full_url|
+  `wget #{full_url}`
+end
+```
+
 <br>
 ### 確認要爬什麼
 
@@ -225,4 +250,61 @@ end
 
 如果你去看我專案下爬出來的圖片，會發現不是截圖的那個洗衣機，那是因為ezprice首頁的商品，每隔一段時間就換一批。
 
-# 結束^_^
+# 臨摹結束
+
+<br>
+##### 修正那個很奇怪的濾網址
+
+按照原範例，濾網址的寫法是
+```
+temp_ans = ans.map do
+  |url| url.match(/^http/) ? url : "http://ezprice.com.tw/#{url}"
+end
+```
+
+但這樣寫很怪，我們用Regex來濾，當妳匹配`http`這段文字，就會跑去`url`，但用chrome工具查看ezprice的網頁，我們爬蟲抓出的圖片網址一定都是正常http開頭，所以我們其實可以寫
+
+
+```
+temp_ans = ans.map do |url|
+ puts url  if url.match(/^http/)
+end
+```
+
+就能濾出
+```
+https://img.ezprice.com.tw/ezpd/557/27557/27557_m.jpg
+https://img.ezprice.com.tw/ezpd/901/36901/36901_m.jpg
+https://img.ezprice.com.tw/ezpd/296/3296/3296_m.jpg
+https://img.ezprice.com.tw/ezpd/480/47480/47480_m.jpg
+https://img.ezprice.com.tw/ezpd/819/7819/7819_m.jpg
+https://img.ezprice.com.tw/ezpd/511/37511/37511_m.jpg
+https://img.ezprice.com.tw/ezpd/445/55445/55445_m.jpg
+https://img.ezprice.com.tw/ezpd/100/2100/2100_m.jpg
+```
+
+我先把範例寫法下載的圖片移到`ex4/original`
+
+最後完整的code，一樣可以下載圖片，我把載好的圖片移到`ex4/neway`資料夾
+```
+require 'nokogiri'
+require 'open-uri'
+
+html = open("http://ezprice.com.tw/").read
+doc = Nokogiri::HTML(html)
+ans = []
+
+doc.css('p[@class=Midget_pic] a img').each do |img|
+  ans << img.attr('src')
+end
+
+temp_ans = ans.map do |url|
+  url if url.match(/^http/)
+end
+
+temp_ans.each do |full_url|
+  `wget #{full_url}`
+end
+```
+
+#結束 ^_^
