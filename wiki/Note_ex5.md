@@ -832,7 +832,7 @@ class SimpleGetCrawler
 end
 ```
 
-又噴，所以我們先把判斷`<span itemprop="price" content="...">....</span>`存在的`if pd.css(".price_range [itemprop='price']").first`判斷式加回去吧，若不懂為何這樣寫，可以參考[Searching an HTML / XML Document](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)的**Single Results**這節
+又噴，所以我們先把判斷`<span itemprop="price" content="...">....</span>`存在的`if pd.css(".price_range [itemprop='price']").first`判斷式加回去吧。若不懂為何這樣寫，可以參考[Searching an HTML / XML Document](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)的**Single Results**這節
 
 fix `examples/ex5/ezprice.rb`
 ```
@@ -853,7 +853,7 @@ class SimpleGetCrawler
 end
 ```
 
-結果印出來的價格居然是string，所以我們把它轉成integer吧
+結果印出來的價格居然是string，所以我們用`to_i`把它轉成integer吧
 
 fix `examples/ex5/ezprice.rb`
 
@@ -861,3 +861,5 @@ fix `examples/ex5/ezprice.rb`
 hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".price_range [itemprop='price']").first
 
 ```
+
+很好，結束。
