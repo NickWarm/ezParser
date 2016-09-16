@@ -121,14 +121,19 @@ div.srch_content > div.srch_c_r > div.price_range + div.shop_count + link + a
 
 我們先抓到一整排商品`div.pd-list > li`。
 
-接著我們從`li.pd-li > div.srch_content > div.srch_c_l > div.srch_pdname > a > h3{TATUNG大同電鍋10人份(TAC-10A)}`取出商品名稱
+![2](../examples/ex5/images/2.png)
 
+以第一項商品**TATUNG大同電鍋10人份(TAC-10A)** 為例
+
+我們從`li.pd-li > div.srch_content > div.srch_c_l > div.srch_pdname > a > h3{TATUNG大同電鍋10人份(TAC-10A)}`取出商品名稱
 
 ![5](../examples/ex5/images/5.png)
 
 從`li.pd-li > div.srch_content > div.price_range > span[itemprop="price" content="1990"]`取出商品價格數字
 
 ![6](../examples/ex5/images/6.png)
+
+good!!!，可以開始寫code了
 
 ### 從網頁讀資料
 
@@ -302,17 +307,527 @@ $ pry
 => {"Jane Doe"=>10, "Jim Doe"=>6}
 ```
 
-###
+### 爬出商品名稱
+
+先把觀察到的心得寫在這：剛開始學時用`xpath`，都以為要一層一層寫，現在用`css`爬，發現只要寫要爬的**屬性或HTML tag**，不需要一層層每層都寫，真是方便愉快啊。
 
 fix `examples/ex5/ezprice.rb`
 
 ```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
 
+      list << hash
+    end
+    ap list
+  end
+end
 ```
 
-
 ###### text
->用來取HTML tag裡的文字，跟Nokogiri的`content`一樣的用法，詳情幾見`ex2`的筆記`wiki/Note_ex2.md`
+>用來取HTML tag裡的文字，跟Nokogiri的`content`一樣的用法，詳情幾見`ex2`的筆記`wiki/Note_ex2.md`。另外這個text真的很妙，在這範例中我們要爬的目標是`div.srch_pdname > a > h3{商品名稱}`，我們只要寫`pd.css(".srch_pdname").text().strip`就能抓到最裡面那層`h3`的文字，真的太神奇了XD
 
 ###### strip
 >一個去掉**空格、換行字元**的方法，請看[String#strip](https://ruby-doc.org/core-2.2.0/String.html#method-i-strip)，一樣操Pry就很有感了。
+
+印出
+```
+ezParser/examples/ex5 on master*
+$ ruby ezprice.rb
+[
+    [ 0] {
+        :title => "大同電鍋不銹鋼內鍋【20人份】(TAC-20A-SG)"
+    },
+    [ 1] {
+        :title => "TATUNG大同電鍋10人份(TAC-10A)"
+    },
+    [ 2] {
+        :title => "TATUNG大同電鍋6人份 (不銹鋼配件) (TAC-06-K)"
+    },
+    [ 3] {
+        :title => "TATUNG大同220V電鍋11人份(TAC-11K-D)"
+    },
+    [ 4] {
+        :title => "大同 TATUNG 11人份不銹鋼配件電鍋(TAC-11T-D)"
+    },
+    [ 5] {
+        :title => "TATUNG大同11人份多功能花漾電鍋TAC-11B"
+    },
+    [ 6] {
+        :title => "TATUNG大同3人份多功能電鍋 (TAC-03DW)"
+    },
+    [ 7] {
+        :title => "大同 TATUNG 10人份電鍋(TAC-10L-A)"
+    },
+    [ 8] {
+        :title => "TATUNG 大同 10人份黃金電鍋 (TAC-10L-NGD)"
+    },
+    [ 9] {
+        :title => "TATUNG大同20人份電鍋 (TAC-20A)"
+    },
+    [10] {
+        :title => "TATUNG大同15人份電鍋 (TAC-15A)"
+    },
+    [11] {
+        :title => "TATUNG大同11人份時尚奈米電鍋(TAC-11A)"
+    },
+    [12] {
+        :title => "TATUNG大同6人份電鍋 (不鏽鋼內鍋) (TAC-06-S)"
+    },
+    [13] {
+        :title => "TATUNG大同3人份電鍋 (不銹鋼內鍋) (TAC-3S)"
+    },
+    [14] {
+        :title => "大同 TATUNG 15人份不銹鋼內鍋電鍋(TAC-15L-S)"
+    },
+    [15] {
+        :title => "TATUNG大同11人份全不鏽鋼電鍋(TAC-11KN)"
+    },
+    [16] {
+        :title => "TATUNG大同15人份電鍋 (不銹鋼內鍋) (TAC-15A-S)"
+    },
+    [17] {
+        :title => "【大同TATUNG】6人份微電腦智慧溫控AI電鍋 TAC-06EA"
+    },
+    [18] {
+        :title => "TATUNG大同20人份電鍋 (不銹鋼內鍋) (TAC-20A-S)"
+    },
+    [19] {
+        :title => "【TATUNG大同】6人份電鍋（TAC-06L-SG/TAC-06L-SR）"
+    },
+    [20] {
+        :title => "TATUNG大同 蛋黃哥按一下電鍋(6人份) (TAC-06L-NGTA )"
+    },
+    [21] {
+        :title => "大同 TATUNG 11人份全不鏽鋼電鍋(TAC-11T-NM)"
+    },
+    [22] {
+        :title => "大同電鍋電源線AC-8(6人、10人、11人)"
+    },
+    [23] {
+        :title => "懷舊台灣鑰匙圈-大同電鍋"
+    },
+    [24] {
+        :title => "懷舊台灣鑰匙圈-大同電鍋"
+    },
+    [25] {
+        :title => "大同電鍋11人份全不鏽鋼TAC-11T-NM"
+    },
+    [26] {
+        :title => "【福滿門】懷舊台灣鑰匙圈-大同電鍋-任選"
+    },
+    [27] {
+        :title => "大同電鍋10人份不鏽鋼內鍋TAC-10L-CR 紅"
+    },
+    [28] {
+        :title => "【福滿門】懷舊台灣鑰匙圈-大同電鍋-任選"
+    },
+    [29] {
+        :title => "大同電鍋10人份不鏽鋼內鍋TAC-10L-CU_紫"
+    },
+    [30] {
+        :title => "大同電鍋10人份不鏽鋼內鍋TAC-10L-CG_綠"
+    },
+    [31] {
+        :title => "大同電鍋不銹鋼內鍋【20人份】(TAC-20A-SG)"
+    },
+    [32] {
+        :title => "日本Recolte POT DUO ESPRIT RPD,一台四用鍋煎 煮 蒸 炸取代大同電鍋東阪屋"
+    },
+    [33] {
+        :title => "大同電鍋6人份不鏽鋼內鍋TAC-06L-SI_桃紅"
+    },
+    [34] {
+        :title => "【美心 MASIONS】維多利亞 Victoria 皇家316不鏽鋼電鍋內鍋 台灣製造 大同電鍋(10人份 23CM 加高型)"
+    },
+    [35] {
+        :title => "【美心 MASIONS】維多利亞 Victoria 皇家316不鏽鋼電鍋內鍋 台灣製造 大同電鍋(10人份 23CM 加高型)"
+    },
+    [36] {
+        :title => "大同6人星球電鍋TAC-06HT"
+    },
+    [37] {
+        :title => "【大同】 15人份電鍋 TAC-15AS"
+    },
+    [38] {
+        :title => "【大同】 20人份電鍋 TAC-20AS"
+    },
+    [39] {
+        :title => "大同多功能電鍋15人份 紅色"
+    },
+    [40] {
+        :title => "大同10人份220V電鍋"
+    },
+    [41] {
+        :title => ""
+    },
+    [42] {
+        :title => ""
+    },
+    [43] {
+        :title => ""
+    },
+    [44] {
+        :title => ""
+    },
+    [45] {
+        :title => ""
+    },
+    [46] {
+        :title => ""
+    },
+    [47] {
+        :title => ""
+    },
+    [48] {
+        :title => ""
+    }
+]
+```
+
+非常好，我們爬出商品名稱了，不過有很多是空的，所以我們再改一下code，讓`hash[:title]`做判斷，如果是空值就不要
+
+fix `examples/ex5/ezprice.rb`
+
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      ...
+
+      list << hash if hash[:title] != ""
+    end
+    ap list
+  end
+end
+```
+
+然後再印一次，可以看到我們就不會抓這些空值了。
+
+### 爬出商品價格
+
+fix `examples/ex5/ezprice.rb`
+
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+      hash[:price] = pd.css(".price_range [itemprop='price']").first("content").to_i
+
+      list << hash if hash[:title] != ""
+    end
+    ap list
+  end
+end
+```
+
+噴錯
+```
+/Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:27:in `first': undefined method `times' for "content":String (NoMethodError)
+	from ezprice.rb:15:in `block in go!'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
+	from ezprice.rb:12:in `each_with_index'
+	from ezprice.rb:12:in `go!'
+	from ezprice.rb:23:in `<main>'
+```
+
+抓蟲，一開始改成跟範例一樣，有加if判斷式
+```
+hash[:price] = pd.css(".price_range [itemprop='price']").first("content").to_i if pd.css(".price_range [itemprop='price']").first
+```
+
+結果噴一樣的錯誤，檢查了老半天才發現，應該寫成`first["content"]`
+
+改成
+```
+hash[:price] = pd.css(".price_range [itemprop='price']").first["content"].to_i if pd.css(".price_range [itemprop='price']").first
+```
+
+~~後來想想這滿合邏輯的，因為我們要取hash中的東西都是用中括號`[]`來取的~~。直接看[Nokogiri的官方教學](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)的**Slop**這節，他的example code就能看到`first["..."]`這樣的用法了
+
+於是我們把判斷式拿掉
+
+fix `examples/ex5/ezprice.rb`
+```
+if pd.css(".price_range [itemprop='price']").first
+```
+
+
+居然又噴錯
+```
+ezprice.rb:15:in `block in go!': undefined method `[]' for nil:NilClass (NoMethodError)
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
+	from ezprice.rb:12:in `each_with_index'
+	from ezprice.rb:12:in `go!'
+	from ezprice.rb:23:in `<main>'
+```
+
+於是我們回到[搜尋大同電鍋](http://ezprice.com.tw/s/大同電鍋/price/)開chrome查看到底怎麼回事吧，從我們剛剛印出的資料，我們知道最後一個商品是**大同10人份220V電鍋**
+
+![7](../examples/ex5/images/7.png)
+
+我們把這商品的`li`縮起來後發現，下面還有一個`li.srlistbox`，難怪剛剛爬商品名稱`hash[:title]`時會印出空值
+
+![8](../examples/ex5/images/8.png)
+
+所以我們還是要像`hash[:title]`一樣寫個判斷式，判斷`.price_range`底下的`[itemprop='price']`是否存在
+
+fix `examples/ex5/ezprice.rb`
+```
+ hash[:price] = pd.css(".price_range [itemprop='price']").first["content"].to_i if pd.css(".price_range [itemprop='price']").first
+```
+
+結果印出來的東西，下面又沒有價錢....
+
+一樣繼續抓蟲，這次我們不只印價格，`span[itemprop='price']`的東西全部都印出來
+
+fix `examples/ex5/ezprice.rb`
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+      hash[:price] = pd.css(".price_range [itemprop='price']")
+
+      list << hash if hash[:title] != ""
+    end
+    ap list
+  end
+end
+```
+
+印出
+```
+[
+    [ 0] {
+        :title => "大同電鍋不銹鋼內鍋【20人份】(TAC-20A-SG)",
+        :price => []
+    },
+    [ 1] {
+        :title => "TATUNG大同電鍋10人份(TAC-10A)",
+        :price => <span itemprop="price" content="1990">$1,990～</span>
+    },
+    [ 2] {
+        :title => "TATUNG大同電鍋6人份 (不銹鋼配件) (TAC-06-K)",
+        :price => <span itemprop="price" content="4290">$4,290～</span>
+    },
+    [ 3] {
+        :title => "TATUNG大同220V電鍋11人份(TAC-11K-D)",
+        :price => <span itemprop="price" content="2580">$2,580～</span>
+    },
+    [ 4] {
+        :title => "大同 TATUNG 11人份不銹鋼配件電鍋(TAC-11T-D)",
+        :price => <span itemprop="price" content="2520">$2,520～</span>
+    },
+    [ 5] {
+        :title => "TATUNG大同11人份多功能花漾電鍋TAC-11B",
+        :price => <span itemprop="price" content="4024">$4,024～</span>
+    },
+    [ 6] {
+        :title => "TATUNG大同3人份多功能電鍋 (TAC-03DW)",
+        :price => <span itemprop="price" content="3196">$3,196～</span>
+    },
+    [ 7] {
+        :title => "大同 TATUNG 10人份電鍋(TAC-10L-A)",
+        :price => <span itemprop="price" content="2380">$2,380～</span>
+    },
+    [ 8] {
+        :title => "TATUNG 大同 10人份黃金電鍋 (TAC-10L-NGD)",
+        :price => <span itemprop="price" content="3880">$3,880～</span>
+    },
+    [ 9] {
+        :title => "TATUNG大同20人份電鍋 (TAC-20A)",
+        :price => <span itemprop="price" content="2933">$2,933～</span>
+    },
+    [10] {
+        :title => "TATUNG大同15人份電鍋 (TAC-15A)",
+        :price => <span itemprop="price" content="2650">$2,650～</span>
+    },
+    [11] {
+        :title => "TATUNG大同11人份時尚奈米電鍋(TAC-11A)",
+        :price => <span itemprop="price" content="4910">$4,910～</span>
+    },
+    [12] {
+        :title => "TATUNG大同6人份電鍋 (不鏽鋼內鍋) (TAC-06-S)",
+        :price => <span itemprop="price" content="1768">$1,768～</span>
+    },
+    [13] {
+        :title => "TATUNG大同3人份電鍋 (不銹鋼內鍋) (TAC-3S)",
+        :price => <span itemprop="price" content="1768">$1,768～</span>
+    },
+    [14] {
+        :title => "大同 TATUNG 15人份不銹鋼內鍋電鍋(TAC-15L-S)",
+        :price => <span itemprop="price" content="2397">$2,397～</span>
+    },
+    [15] {
+        :title => "TATUNG大同11人份全不鏽鋼電鍋(TAC-11KN)",
+        :price => <span itemprop="price" content="4280">$4,280～</span>
+    },
+    [16] {
+        :title => "TATUNG大同15人份電鍋 (不銹鋼內鍋) (TAC-15A-S)",
+        :price => <span itemprop="price" content="2650">$2,650～</span>
+    },
+    [17] {
+        :title => "【大同TATUNG】6人份微電腦智慧溫控AI電鍋 TAC-06EA",
+        :price => <span itemprop="price" content="5272">$5,272～</span>
+    },
+    [18] {
+        :title => "TATUNG大同20人份電鍋 (不銹鋼內鍋) (TAC-20A-S)",
+        :price => <span itemprop="price" content="3120">$3,120～</span>
+    },
+    [19] {
+        :title => "【TATUNG大同】6人份電鍋（TAC-06L-SG/TAC-06L-SR）",
+        :price => <span itemprop="price" content="1768">$1,768～</span>
+    },
+    [20] {
+        :title => "TATUNG大同 蛋黃哥按一下電鍋(6人份) (TAC-06L-NGTA )",
+        :price => <span itemprop="price" content="3278">$3,278～</span>
+    },
+    [21] {
+        :title => "大同 TATUNG 11人份全不鏽鋼電鍋(TAC-11T-NM)",
+        :price => <span itemprop="price" content="3699">$3,699～</span>
+    },
+    [22] {
+        :title => "大同電鍋電源線AC-8(6人、10人、11人)",
+        :price => []
+    },
+    [23] {
+        :title => "懷舊台灣鑰匙圈-大同電鍋",
+        :price => []
+    },
+    [24] {
+        :title => "懷舊台灣鑰匙圈-大同電鍋",
+        :price => []
+    },
+    [25] {
+        :title => "大同電鍋11人份全不鏽鋼TAC-11T-NM",
+        :price => []
+    },
+    [26] {
+        :title => "【福滿門】懷舊台灣鑰匙圈-大同電鍋-任選",
+        :price => []
+    },
+    [27] {
+        :title => "大同電鍋10人份不鏽鋼內鍋TAC-10L-CR 紅",
+        :price => []
+    },
+    [28] {
+        :title => "【福滿門】懷舊台灣鑰匙圈-大同電鍋-任選",
+        :price => []
+    },
+    [29] {
+        :title => "大同電鍋10人份不鏽鋼內鍋TAC-10L-CU_紫",
+        :price => []
+    },
+    [30] {
+        :title => "大同電鍋10人份不鏽鋼內鍋TAC-10L-CG_綠",
+        :price => []
+    },
+    [31] {
+        :title => "大同電鍋不銹鋼內鍋【20人份】(TAC-20A-SG)",
+        :price => []
+    },
+    [32] {
+        :title => "日本Recolte POT DUO ESPRIT RPD,一台四用鍋煎 煮 蒸 炸取代大同電鍋東阪屋",
+        :price => []
+    },
+    [33] {
+        :title => "大同電鍋6人份不鏽鋼內鍋TAC-06L-SI_桃紅",
+        :price => []
+    },
+    [34] {
+        :title => "【美心 MASIONS】維多利亞 Victoria 皇家316不鏽鋼電鍋內鍋 台灣製造 大同電鍋(10人份 23CM 加高型)",
+        :price => []
+    },
+    [35] {
+        :title => "【美心 MASIONS】維多利亞 Victoria 皇家316不鏽鋼電鍋內鍋 台灣製造 大同電鍋(10人份 23CM 加高型)",
+        :price => []
+    },
+    [36] {
+        :title => "大同6人星球電鍋TAC-06HT",
+        :price => []
+    },
+    [37] {
+        :title => "【大同】 15人份電鍋 TAC-15AS",
+        :price => []
+    },
+    [38] {
+        :title => "【大同】 20人份電鍋 TAC-20AS",
+        :price => []
+    },
+    [39] {
+        :title => "大同多功能電鍋15人份 紅色",
+        :price => []
+    },
+    [40] {
+        :title => "大同10人份220V電鍋",
+        :price => []
+    }
+]
+```
+
+恩....很好，而且連最上面EZ幫你選的**大同電鍋不銹鋼內鍋【20人份】** 也沒有，我們回到[搜尋大同電鍋](http://ezprice.com.tw/s/大同電鍋/price/)開chrome查看到底怎麼回事吧。我檢查最上面的**大同電鍋不銹鋼內鍋** 、**TATUNG大同電鍋10人份** 與最下面的**大同10人份220V電鍋** 這兩個商品
+
+然後，一切真相大白了
+
+**大同電鍋不銹鋼內鍋** 的價格位在`div.srch_c_r > div.market_range > span[itemprop='price']`
+
+![9](../examples/ex5/images/9.png)
+
+**TATUNG大同電鍋10人份** 的價格位在`div.srch_c_r > div.price_range > span[itemprop='price']`
+
+![10](../examples/ex5/images/10.png)
+
+**大同10人份220V電鍋** 的價格位在`div.srch_c_r > div.market_range > span[itemprop='price']`
+
+![11](../examples/ex5/images/11.png)
+
+我們當初爬價格的**上層**標的物抓錯了，應該改成`.srch_c_r`
+
+於是 fix `examples/ex5/ezprice.rb`
+```
+hash[:price] = pd.css(".srch_c_r [itemprop='price']")
+```
+
+很愉快，東西都抓到了，我們可以抓價格了
+
+fix `examples/ex5/ezprice.rb`
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+      hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"]
+
+      list << hash if hash[:title] != ""
+    end
+    ap list
+  end
+end
+```

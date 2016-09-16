@@ -11,11 +11,15 @@ class SimpleGetCrawler
     list = []
     doc.css(".pd-list li").each_with_index do |pd, index|
       hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+      hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"]
 
-      list << hash
+      list << hash if hash[:title] != ""
     end
     ap list
   end
 end
 
 SimpleGetCrawler.go!
+
+# if pd.css(".srch_c_r [itemprop='price']").first
