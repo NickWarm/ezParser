@@ -112,7 +112,7 @@ books.xpath("//div[@class='sec_1']/a").each do |a|
 end
 ```
 
-##### 也可以用ex2教的`css`來爬
+##### 也可以用ex2教的`css`來爬 (這是一個不佳的寫法)
 
 fix `ezparser/examples/ex2/carlo.rb`
 
@@ -141,6 +141,25 @@ ruby carlo.rb
 
 威利在哪裡？3：奇幻大冒險（暢銷修訂版）
 ```
+
+##### 用css爬較佳的寫法
+
+我是練了`ex5`後，才瞭解用`css`爬較佳的寫法，直接上code
+
+完整的code
+```
+require 'nokogiri'
+require 'open-uri'
+
+books = Nokogiri::HTML(open('http://www.books.com.tw/activity/gold66_day/?loc=activity_BK_001'))
+
+puts "### Search for nodes by css with Bookstore"
+
+books.css(".sec_1 a").each do |a|
+  puts a.content
+end
+```
+
 
 > 除了`css`與`xpath`之外，你也可以用`search`。請參考[Nokogiri wiki](https://github.com/sparklemotion/nokogiri/wiki)的**Quick start to parsing HTML**這節。不過我個人是不太喜歡`search`，因為網路上的範例太少了。此外這節的第一個範例教你爬google搜尋的不要做，因為根本爬不出東西出來。
 

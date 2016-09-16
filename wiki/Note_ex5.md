@@ -80,7 +80,89 @@ from (pry):13:in `__pry__'
 ###### !
 >印象中`!`在Ruby是永久改變某東西，辜狗看到[Why are exclamation marks used in Ruby methods?](http://stackoverflow.com/questions/612189/why-are-exclamation-marks-used-in-ruby-methods)這篇，跟我想得一樣
 
-###
+### 目標：爬出商品的「名稱、價錢」
+
+我們的目標是爬出商品的「名稱、價錢」，一開始一樣要先研究我們要怎麼爬。這個範例我們去[EZprice比價網](http://ezprice.com.tw/)搜尋[大同電鍋](http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/)，我們看到**符合 大同電鍋 比價結果的推薦商品**這邊，從上往下拉有一整排商品，我點選第一個**TATUNG大同電鍋10人份(TAC-10A)** 然後用chrome工具查看。
+
+![1](../examples/ex5/images/1.png)
+
+我們可以看到搜尋出來的商品，從上而下他的HTML結構是
+```
+div.pd-list > ul > li.pd-li.ad-ez + div.goto_market + li.pd-li + li.pd-li + li.pd-li + ...
+```
+
+![2](../examples/ex5/images/2.png)
+
+而我們點選的**TATUNG大同電鍋10人份(TAC-10A)** 它的結構是
+```
+li.pd-li > div.pdimg + div.srch_content + a.link-block
+```
+
+`div.srch_content`的子結構
+```
+div.srch_content > div.srch_c_l + div.srch_c_r
+```
+
+而各自裡面又有
+```
+div.srch_content > div.srch_c_l > div.srch_pdname > a[title="TATUNG大同電鍋10人份(TAC-10A)"]
+```
+
+![3](../examples/ex5/images/3.png)
+
+與
+```
+div.srch_content > div.srch_c_r > div.price_range + div.shop_count + link + a
+```
+
+![4](../examples/ex5/images/4.png)
+
+知道結構後我們就很愉快啦
+
+我們先抓到一整排商品`div.pd-list > li`。
+
+接著我們從`li.pd-li > div.srch_content > div.srch_c_l > div.srch_pdname > a > h3{TATUNG大同電鍋10人份(TAC-10A)}`取出商品名稱
+
+
+![5](../examples/ex5/images/5.png)
+
+從`li.pd-li > div.srch_content > div.price_range > span[itemprop="price" content="1990"]`取出商品價格數字
+
+![6](../examples/ex5/images/6.png)
+
+### 從網頁讀資料
+
+fix `examples/ex5/ezprice.rb`
+
+在這次的範例，我們用`rest-client`來讀網址，過去我們用`open-uri`把讀到的網址全部拿去給Nokogiri爬，但這次我們用`rest-client`可以把讀到的網址只取HTML結構中的`body`拿去給Nokogiri爬。
+
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+  end
+end
+```
+
+在此我們先來看一下剛剛裝的`awesome_print`的效果
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+
+    ap doc
+  end
+end
+```
+
+然後去`iTerm`，在`zParser/examples/ex5`下
+```
+ruby ezprice.rb
+```
+
+可以看到，比用傳統的`print doc`畫面精美許多
 
 ###### RestClient
 >比`open-uri`功能更強大的`rest-client`。
@@ -122,10 +204,55 @@ $ pry
 =>..... (一大串，要退出請按q)
 ```
 
+###### Awesome print
+>可以先瀏覽[試用 awesome_print Gem](http://sikaplayground.blogspot.tw/2014/08/awesomeprint-gem.html)這篇，然後再去[awesome_print的GitHub](https://github.com/awesome-print/awesome_print)看[Examples](https://github.com/awesome-print/awesome_print#examples)直接操Pry
 
+```
+ezParser/examples/ex5 on master*
+$ pry
+[1] pry(main)> require "awesome_print"
+=> true
+[2] pry(main)> data = [ false, 42, %w(forty two), { :now => Time.now, :class => Time.now.class, :distance => 42e42 } ]
+=> [false, 42, ["forty", "two"], {:now=>2016-09-16 21:04:14 +0800, :class=>Time, :distance=>4.2e+43}]
+[3] pry(main)> ap data
+[
+    [0] false,
+    [1] 42,
+    [2] [
+        [0] "forty",
+        [1] "two"
+    ],
+    [3] {
+             :now => 2016-09-16 21:04:14 +0800,
+           :class => Time < Object,
+        :distance => 4.2e+43
+    }
+]
+=> nil
+```
+可以看到畫面整個變得非常精美，結構清楚。
 
+###
 
+fix `examples/ex5/ezprice.rb`
 
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+
+      list << hash
+    end
+    ap list
+  end
+end
+```
+
+寫到這邊，有沒有感覺很像我們`ex3`的架構。
 
 ###### each_with_index
 >[Enumerable#each_with_index](http://ruby-doc.org/core-2.3.1/Enumerable.html#method-i-each_with_index)，一樣看到**example code**。如果你跟我一樣第一次看時不是很懂，可以看[Arrays: map & eachwithindex](https://blog.hothero.org/2015/05/29/ruby-on-rails-cool-stuff-tip/)這篇，不過第一個範例的寫法是錯的。
@@ -174,6 +301,15 @@ $ pry
 1-["Jim Doe", 6]
 => {"Jane Doe"=>10, "Jim Doe"=>6}
 ```
+
+###
+
+fix `examples/ex5/ezprice.rb`
+
+```
+
+```
+
 
 ###### text
 >用來取HTML tag裡的文字，跟Nokogiri的`content`一樣的用法，詳情幾見`ex2`的筆記`wiki/Note_ex2.md`
