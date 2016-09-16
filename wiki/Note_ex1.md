@@ -262,7 +262,9 @@ puts doc.xpath("//body[@id='story_body']")
 
 ### 練了ex5後，一些補充內容
 
-在練ex5時，學到了Nokogiri的`first`寫法，於是參考[Searching an HTML / XML Document](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)後，拿ex1來練，直接上code
+在練ex5時，學到了Nokogiri的`first`寫法，於是參考[Searching an HTML / XML Document](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)的**Single Results**這節之後，拿ex1來練，直接上code
+
+fix `example/ex1/noko.rb`
 ```
 require 'nokogiri'
 require 'open-uri'
@@ -290,3 +292,36 @@ doc = Nokogiri::HTML( htmlData )
 
 puts doc.css("h1").first["class"]
 ```
+
+印出`first h1`
+
+fix `example/ex1/noko.rb`
+```
+require 'nokogiri'
+require 'open-uri'
+
+htmlData = "
+<html>
+	<title id= 'title'> This is a simple html </title>
+	<body id='story_body'>
+		<h2> this is h2 in story_body </h2>
+	</body>
+	<h1 class='first h1'> test h1-1 </h1>
+	<h1> test h1-2 </h1>
+	<h3>
+		<img src = 'goodPic-1.jpg' >
+		<a href = 'www.google.com'> google web site </a>
+		<img src = 'goodPic-2.jpg' >
+		<a href = 'www.yahoo.com'> yahoo web site </a>
+	</h3>
+	<div class= 'div_1'>
+		<h2> this is h1 in div_1 </h2>
+	</div>
+</html>
+"
+doc = Nokogiri::HTML( htmlData )
+
+puts doc.css("h1").first
+```
+
+印出`<h1 class="first h1"> test h1-1 </h1>`

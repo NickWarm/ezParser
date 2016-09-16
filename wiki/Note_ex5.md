@@ -831,3 +831,33 @@ class SimpleGetCrawler
   end
 end
 ```
+
+又噴，所以我們先把判斷`<span itemprop="price" content="...">....</span>`存在的`if pd.css(".price_range [itemprop='price']").first`判斷式加回去吧，若不懂為何這樣寫，可以參考[Searching an HTML / XML Document](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)的**Single Results**這節
+
+fix `examples/ex5/ezprice.rb`
+```
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+      hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"] if pd.css(".price_range [itemprop='price']").first
+
+      list << hash if hash[:title] != ""
+    end
+    ap list
+  end
+end
+```
+
+結果印出來的價格居然是string，所以我們把它轉成integer吧
+
+fix `examples/ex5/ezprice.rb`
+
+```
+hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".price_range [itemprop='price']").first
+
+```
