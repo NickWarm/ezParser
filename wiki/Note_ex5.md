@@ -28,9 +28,59 @@ require 'nokogiri'
 require 'awesome_print'
 ```
 
+### 寫好run程式碼的架構
+
+fix `examples/ex5/ezprice.rb`
+
+```
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+
+class SimpleGetCrawler
+  def self.go!
+
+  end
+end
+
+SimpleGetCrawler.go!
+
+```
+###### self
+>對於**self**可以看[self | 邁向 Rails 高級新手](https://airsonwayne.gitbooks.io/rocodev-practice-series/content/chapter3-ruby/self.html)。一樣，我們直接操Pry這example code，就很清楚瞭解了。實際打過這範例後，再看[Self in Ruby | Jimmy Cuadra]()這篇，就很清楚了。
+
+```
+ezParser/examples/ex5 on master*
+$ pry
+[1] pry(main)> class Foo
+[1] pry(main)*   def self.foo
+[1] pry(main)*     "class method"
+[1] pry(main)*   end
+[1] pry(main)*   def foo
+[1] pry(main)*     "instance method"
+[1] pry(main)*   end
+[1] pry(main)*   def foobar
+[1] pry(main)*     self.foo
+[1] pry(main)*   end
+[1] pry(main)* end
+=> :foobar
+[2] pry(main)> Foo.foo
+=> "class method"
+[3] pry(main)> Foo.foobar
+NoMethodError: undefined method `foobar' for Foo:Class
+from (pry):13:in `__pry__'
+[4] pry(main)> f = Foo.new
+=> #<Foo:0x007f8ec2be8338>
+[5] pry(main)> f.foobar
+=> "instance method"
+```
+
+###### !
+>印象中`!`在Ruby是永久改變某東西，辜狗看到[Why are exclamation marks used in Ruby methods?](http://stackoverflow.com/questions/612189/why-are-exclamation-marks-used-in-ruby-methods)這篇，跟我想得一樣
+
 ###
-
-
 
 ###### RestClient
 >比`open-uri`功能更強大的`rest-client`。
@@ -74,37 +124,7 @@ $ pry
 
 
 
-###### self
->對於**self**可以看[self | 邁向 Rails 高級新手](https://airsonwayne.gitbooks.io/rocodev-practice-series/content/chapter3-ruby/self.html)。一樣，我們直接操Pry這example code，就很清楚瞭解了。實際打過這範例後，再看[Self in Ruby | Jimmy Cuadra]()這篇，就很清楚了。
 
-```
-ezParser/examples/ex5 on master*
-$ pry
-[1] pry(main)> class Foo
-[1] pry(main)*   def self.foo
-[1] pry(main)*     "class method"
-[1] pry(main)*   end
-[1] pry(main)*   def foo
-[1] pry(main)*     "instance method"
-[1] pry(main)*   end
-[1] pry(main)*   def foobar
-[1] pry(main)*     self.foo
-[1] pry(main)*   end
-[1] pry(main)* end
-=> :foobar
-[2] pry(main)> Foo.foo
-=> "class method"
-[3] pry(main)> Foo.foobar
-NoMethodError: undefined method `foobar' for Foo:Class
-from (pry):13:in `__pry__'
-[4] pry(main)> f = Foo.new
-=> #<Foo:0x007f8ec2be8338>
-[5] pry(main)> f.foobar
-=> "instance method"
-```
-
-###### !
->印象中`!`在Ruby是永久改變某東西，辜狗看到[Why are exclamation marks used in Ruby methods?](http://stackoverflow.com/questions/612189/why-are-exclamation-marks-used-in-ruby-methods)這篇，跟我想得一樣
 
 
 ###### each_with_index
