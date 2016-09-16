@@ -14,8 +14,24 @@
 gem install rest-client
 ```
 
+
+
+### 引用需要的檔案
+
+create `examples/ex5/ezprice.rb`
+
+```
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+```
+
 ###### RestClient
->一開始先看ihower的[Ruby HTTP clients](https://ihower.tw/blog/archives/2941)這篇文章，知道RestClient是透過 HTTP 抓取資料的工具。
+>比`open-uri`功能更強大的`rest-client`。
+
+>一開始我是先看ihower的[Ruby HTTP clients](https://ihower.tw/blog/archives/2941)這篇文章，知道RestClient是透過 HTTP 抓取資料的工具。
 
 >初學[rest-client的GitHub](https://github.com/rest-client/rest-client)看該專案的`README.md`就有像我這種新手需要的知識。我們先看[Usage: Raw URL](https://github.com/rest-client/rest-client#usage-raw-url)的**Basic usage**這節，知道RestClient的`post`與`get`就是HTML Verb的POST、GET，實例可以看[REST Client Example in Ruby](https://webdevsurya.wordpress.com/2014/03/18/rest-client-example-in-ruby/)這篇。
 
@@ -51,6 +67,8 @@ $ pry
 [7] pry(main)> response.body
 =>..... (一大串，要退出請按q)
 ```
+
+
 
 ###### self
 >對於**self**可以看[self | 邁向 Rails 高級新手](https://airsonwayne.gitbooks.io/rocodev-practice-series/content/chapter3-ruby/self.html)。一樣，我們直接操Pry這example code，就很清楚瞭解了。實際打過這範例後，再看[Self in Ruby | Jimmy Cuadra]()這篇，就很清楚了。
@@ -132,3 +150,9 @@ $ pry
 1-["Jim Doe", 6]
 => {"Jane Doe"=>10, "Jim Doe"=>6}
 ```
+
+###### text
+>用來取HTML tag裡的文字，跟Nokogiri的`content`一樣的用法，詳情幾見`ex2`的筆記`wiki/Note_ex2.md`
+
+###### strip
+>一個去掉**空格、換行字元**的方法，請看[String#strip](https://ruby-doc.org/core-2.2.0/String.html#method-i-strip)，一樣操Pry就很有感了。

@@ -143,3 +143,34 @@ ruby carlo.rb
 ```
 
 > 除了`css`與`xpath`之外，你也可以用`search`。請參考[Nokogiri wiki](https://github.com/sparklemotion/nokogiri/wiki)的**Quick start to parsing HTML**這節。不過我個人是不太喜歡`search`，因為網路上的範例太少了。此外這節的第一個範例教你爬google搜尋的不要做，因為根本爬不出東西出來。
+
+##### 印出內容也可以用`text()`
+
+這是寫到`ex5`才來補充的，過去我習慣用`content`來取內容，不過在`ex5`是使用`text()`，於是我改寫了`ex2`的code來試試
+
+fix ``
+
+完整的code
+```
+require 'nokogiri'
+require 'open-uri'
+
+books = Nokogiri::HTML(open('http://www.books.com.tw/activity/gold66_day/?loc=activity_BK_001'))
+
+puts "### Search for nodes by css with Bookstore"
+
+books.xpath("//div[@class='sec_1']/a").each do |a|
+  puts a.text()
+end
+```
+
+work，印出
+```
+### Search for nodes by css with Bookstore
+
+威利在哪裡？（暢銷修訂版）
+
+威利在哪裡？2：穿越時空之旅（暢銷修訂版）
+
+威利在哪裡？3：奇幻大冒險（暢銷修訂版）
+```
