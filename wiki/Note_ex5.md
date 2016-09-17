@@ -237,7 +237,7 @@ $ pry
 ```
 可以看到畫面整個變得非常精美，結構清楚。
 
-###
+### 寫好爬蟲的基本架構
 
 fix `examples/ex5/ezprice.rb`
 
@@ -559,7 +559,7 @@ hash[:price] = pd.css(".price_range [itemprop='price']").first("content").to_i i
 hash[:price] = pd.css(".price_range [itemprop='price']").first["content"].to_i if pd.css(".price_range [itemprop='price']").first
 ```
 
-~~後來想想這滿合邏輯的，因為我們要取hash中的東西都是用中括號`[]`來取的~~。直接看[Nokogiri的官方教學](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)的**Slop**這節，他的example code就能看到`first["..."]`這樣的用法了
+~~後來想想這滿合邏輯的，因為我們要取hash中的東西都是用中括號`[]`來取的~~。直接看[Nokogiri的官方教學](http://www.nokogiri.org/tutorials/searching_a_xml_html_document.html)的**Slop**這節，他的example code就能看到`first["..."]`這樣的用法了，操作的練習可以去`Note_ex1.md`查看。
 
 於是我們把判斷式拿掉
 
@@ -864,7 +864,7 @@ hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if p
 
 很好，結束。
 
-### 抓蟲趣，為何一定要寫if判斷式判斷`<span itemprop="price" content="...">....</span>`的存在
+### 抓蟲趣，為何一定要寫if判斷式
 
 一直以來噴錯的文字都是這段
 ```
@@ -1102,21 +1102,165 @@ end
 ap list
 ```
 
-印出跟上面一樣的結果，所以果然是跳出`each_with_index`之後有蟲。當初噴錯有段話讓我很在意
-```
-from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
-from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
-from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
-```
+噴一樣的錯誤，果然問題在`each_with_index`裡面
 
-所以我們去看一下Nokogiri的原始碼：[node_set.rb](https://github.com/Shopify/nokogiri/blob/master/lib/nokogiri/xml/node_set.rb)的**185~189行**
+### 請Steven大大救援
 
-他的內容是
+感謝Steven再教了我一次`binding.pry`的用法，雖然當初9/17的meetup時已經有演練過給全部人看了....(覺得自己太弱，當時完全跟不上 QQ)
+
+原本我們寫的code
 ```
-# Iterate over each node, yielding  to +block+
-def each(&block)
-  0.upto(length - 1) do |x|
-    yield self[x]
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+      hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+
+      list << hash if hash[:title] != ""
+    end
+    ap list
   end
 end
+
+SimpleGetCrawler.go!
 ```
+
+印出
+```
+ruby ezprice.rb
+ezprice.rb:15:in `block in go!': undefined method `[]' for nil:NilClass (NoMethodError)
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
+	from ezprice.rb:12:in `each_with_index'
+	from ezprice.rb:12:in `go!'
+	from ezprice.rb:26:in `<main>'
+```
+
+發現有錯，於是我們用`binding.pry`來協助抓蟲
+
+fix `examples/ex5/ezprice.rb`
+
+```
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+
+      binding.pry if pd.css(".srch_c_r [itemprop='price']").first == nil
+      hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+
+      list << hash if hash[:title] != ""
+    end
+
+    ap list
+
+  end
+
+end
+
+SimpleGetCrawler.go!
+```
+
+稍微解釋一下新加入的這段
+```
+binding.pry if pd.css(".srch_c_r [itemprop='price']").first == nil
+hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+```
+
+由於`console`一直跟我說抓價格的`hash[:price]`那行有誤，但是剛剛有看到，我們爬`pd.css(".srch_c_r [itemprop='price']")`都有抓到東西，所以我在抓價格的前一行，加入一個中斷點的判斷式
+```
+binding.pry if pd.css(".srch_c_r [itemprop='price']").first == nil
+```
+
+如果沒有抓到東西，就用`binding.pry`進入中斷點，於是印出
+```
+ezParser/examples/ex5 on master*
+$ ruby ezprice.rb
+
+From: /Users/nicholas/Desktop/pracCrawler/ezParser/examples/ex5/ezprice.rb @ line 16 SimpleGetCrawler.go!:
+
+     8: def self.go!
+     9:   response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    10:   doc = Nokogiri::HTML(response.body)
+    11:   list = []
+    12:   doc.css(".pd-list li").each_with_index do |pd, index|
+    13:     hash = {}
+    14:     hash[:title] = pd.css(".srch_pdname").text().strip
+    15:
+ => 16:     binding.pry if pd.css(".srch_c_r [itemprop='price']").first == nil
+    17:     hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+    18:
+    19:     list << hash if hash[:title] != ""
+    20:   end
+    21:
+    22:   ap list
+    23:
+    24: end
+
+[1] pry(SimpleGetCrawler)>
+```
+
+###### binding.pry的用法
+對於`binding.pry`的用法，可以參考葉早彬的[Rails開發常用gem分享](https://youtu.be/xPHoC2ASYhU?t=126)，看完後就會對下面的操作有感。現在我們來看看到底抓到什麼了
+```
+[1] pry(SimpleGetCrawler)> pd.css(".srch_c_r [itemprop='price']").first
+=> nil
+```
+
+恩....我們真的抓到空值，那就給抓價格`hash[:price]`一個判斷式跳過`nil`吧
+
+
+```
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+
+      # binding.pry if pd.css(".srch_c_r [itemprop='price']").first == nil
+      hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".srch_c_r [itemprop='price']").first != nil
+
+      list << hash if hash[:title] != ""
+    end
+
+    ap list
+
+  end
+
+end
+
+SimpleGetCrawler.go!
+
+```
+
+# work，成功印出所有價格了！！！ 這次終於結束了

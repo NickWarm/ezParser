@@ -13,13 +13,10 @@ class SimpleGetCrawler
       hash = {}
       hash[:title] = pd.css(".srch_pdname").text().strip
 
-
-     puts  hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
-
+      # binding.pry if pd.css(".srch_c_r [itemprop='price']").first == nil
+      hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".srch_c_r [itemprop='price']").first != nil
 
       list << hash if hash[:title] != ""
-
-    # binding.pry
     end
 
     ap list
@@ -29,7 +26,3 @@ class SimpleGetCrawler
 end
 
 SimpleGetCrawler.go!
-
-# hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".srch_c_r [itemprop='price']").first
-
-# if pd.css(".srch_c_r [itemprop='price']").first
