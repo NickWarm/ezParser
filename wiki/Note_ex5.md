@@ -863,3 +863,260 @@ hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if p
 ```
 
 很好，結束。
+
+### 抓蟲趣，為何一定要寫if判斷式判斷`<span itemprop="price" content="...">....</span>`的存在
+
+一直以來噴錯的文字都是這段
+```
+ezprice.rb:15:in `block in go!': undefined method `[]' for nil:NilClass (NoMethodError)
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
+	from ezprice.rb:12:in `each_with_index'
+	from ezprice.rb:12:in `go!'
+	from ezprice.rb:23:in `<main>'
+```
+
+我們來用Pry來測試，不寫判斷式是否抓得到價格
+
+###### 用Pry來抓蟲
+
+  >參考[關於Ruby on Rails的Debug(除錯方式)](http://james1239090-blog.logdown.com/?page=3)這篇，用Pry抓蟲就設中斷點`binding.pry`在迴圈裡一層一層檢查，如果想要一次跳出，由於原始網頁已經遺失， 參考**如何跳出一个循环的Ruby Pry？** 這篇的[頁庫存檔](http://webcache.googleusercontent.com/search?q=cache:dR3BqmZQgHsJ:qa.helplib.com/361725+&cd=1&hl=zh-TW&ct=clnk&gl=tw)，可以直接在iTerm裡下`exit!`一次全部跳出迴圈。
+
+fix `examples/ex5/ezprice.rb`
+
+完整的code
+```
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+      # hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".srch_c_r [itemprop='price']").first
+
+    puts  hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+
+
+      list << hash if hash[:title] != ""
+
+      binding.pry
+    end
+    # ap list
+
+  end
+end
+
+SimpleGetCrawler.go!
+```
+
+印出
+```
+ezParser/examples/ex5 on master*
+$ ruby ezprice.rb
+3680
+
+From: /Users/nicholas/Desktop/pracCrawler/ezParser/examples/ex5/ezprice.rb @ line 22 SimpleGetCrawler.go!:
+
+     8: def self.go!
+     9:   response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    10:   doc = Nokogiri::HTML(response.body)
+    11:   list = []
+    12:   doc.css(".pd-list li").each_with_index do |pd, index|
+    13:     hash = {}
+    14:     hash[:title] = pd.css(".srch_pdname").text().strip
+    15:     # hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".srch_c_r [itemprop='price']").first
+    16:
+    17:   puts  hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+    18:
+    19:
+    20:     list << hash if hash[:title] != ""
+    21:
+ => 22:     binding.pry
+    23:   end
+    24:   # ap list
+    25:
+    26: end
+
+[1] pry(SimpleGetCrawler)> exit
+1990
+
+From: /Users/nicholas/Desktop/pracCrawler/ezParser/examples/ex5/ezprice.rb @ line 22 SimpleGetCrawler.go!:
+
+     8: def self.go!
+     9:   response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    10:   doc = Nokogiri::HTML(response.body)
+    11:   list = []
+    12:   doc.css(".pd-list li").each_with_index do |pd, index|
+    13:     hash = {}
+    14:     hash[:title] = pd.css(".srch_pdname").text().strip
+    15:     # hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i if pd.css(".srch_c_r [itemprop='price']").first
+    16:
+    17:   puts  hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+    18:
+    19:
+    20:     list << hash if hash[:title] != ""
+    21:
+ => 22:     binding.pry
+    23:   end
+    24:   # ap list
+    25:
+    26: end
+
+[1] pry(SimpleGetCrawler)> exit!
+```
+
+恩....有抓到啊，再看一次原本的噴錯訊息，似乎跟`each_with_index`有關
+```
+ezprice.rb:15:in `block in go!': undefined method `[]' for nil:NilClass (NoMethodError)
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
+	from ezprice.rb:12:in `each_with_index'
+	from ezprice.rb:12:in `go!'
+	from ezprice.rb:23:in `<main>'
+```
+
+於是我們再簡化code
+
+fix `examples/ex5/ezprice.rb`
+
+```
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+
+class SimpleGetCrawler
+  def self.go!
+    response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+    doc = Nokogiri::HTML(response.body)
+    list = []
+    doc.css(".pd-list li").each_with_index do |pd, index|
+      hash = {}
+      hash[:title] = pd.css(".srch_pdname").text().strip
+
+      puts  hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+
+
+      list << hash if hash[:title] != ""
+    end
+
+
+  end
+end
+
+SimpleGetCrawler.go!
+```
+
+印出
+```
+ezParser/examples/ex5 on master*
+$ ruby ezprice.rb
+3680
+1990
+4290
+4024
+3196
+2380
+2580
+2508
+3880
+2933
+2518
+2397
+1768
+4910
+1768
+4280
+2518
+5272
+2964
+1768
+3278
+3601
+150
+120
+120
+3790
+120
+1890
+1890
+1890
+120
+3680
+2270
+2190
+1590
+1590
+4490
+2650
+2900
+2035
+2964
+ezprice.rb:17:in `block in go!': undefined method `[]' for nil:NilClass (NoMethodError)
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
+	from ezprice.rb:12:in `each_with_index'
+	from ezprice.rb:12:in `go!'
+	from ezprice.rb:30:in `<main>'
+```
+
+恩...果然是跳出`each_with_index`之後才噴的，現在來測試一下到底是`block in go!`的問題還是`each_with_index`的問題
+
+fix `examples/ex5/ezprice.rb`
+
+```
+require 'nokogiri'
+require 'rest-client'
+require 'pry'
+require 'nokogiri'
+require 'awesome_print'
+
+response = RestClient.get("http://ezprice.com.tw/s/%E5%A4%A7%E5%90%8C%E9%9B%BB%E9%8D%8B/price/")
+doc = Nokogiri::HTML(response.body)
+list = []
+doc.css(".pd-list li").each_with_index do |pd, index|
+  hash = {}
+  hash[:title] = pd.css(".srch_pdname").text().strip
+
+
+ puts  hash[:price] = pd.css(".srch_c_r [itemprop='price']").first["content"].to_i
+
+
+  list << hash if hash[:title] != ""
+
+# binding.pry
+end
+
+ap list
+```
+
+印出跟上面一樣的結果，所以果然是跳出`each_with_index`之後有蟲。當初噴錯有段話讓我很在意
+```
+from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:187:in `block in each'
+from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `upto'
+from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/nokogiri-1.6.8/lib/nokogiri/xml/node_set.rb:186:in `each'
+```
+
+所以我們去看一下Nokogiri的原始碼：[node_set.rb](https://github.com/Shopify/nokogiri/blob/master/lib/nokogiri/xml/node_set.rb)的**185~189行**
+
+他的內容是
+```
+# Iterate over each node, yielding  to +block+
+def each(&block)
+  0.upto(length - 1) do |x|
+    yield self[x]
+  end
+end
+```
