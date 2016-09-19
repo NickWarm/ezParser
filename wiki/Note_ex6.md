@@ -130,3 +130,40 @@ mail地址：shay@awesome.com
 >這樣解釋後，再看[HTML mailto 语法](http://www.dreamdu.com/xhtml/mailto/)這篇，應該就會很有感了。
 
 >最後我是用下用`SelTh`在chrome工具裡搜尋，才發現他是張被hidden的表單
+
+
+今天2016/9/19，爬大同大學的選課系統，爬個三次後，午飯回來就一直噴這錯誤
+```
+ezparser/examples/ex6 on master*
+$ ruby ttucrawler.rb
+/Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient/request.rb:790:in `rescue in transmit': Timed out connecting to server (RestClient::Exceptions::OpenTimeout)
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient/request.rb:698:in `transmit'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient/request.rb:215:in `execute'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient/request.rb:52:in `execute'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient.rb:71:in `post'
+	from ttucrawler.rb:28:in `get_course_by_class'
+	from ttucrawler.rb:8:in `go!'
+	from ttucrawler.rb:41:in `<main>'
+```
+
+真的讓我覺得太漚了，然後到傍晚想再試一次，噴了新的東西出來
+```
+ezparser/examples/ex6 on master*
+$ ruby ttucrawler.rb
+/Users/nicholas/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/net/http.rb:879:in `initialize': getaddrinfo: nodename nor servname provided, or not known (SocketError)
+	from /Users/nicholas/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/net/http.rb:879:in `open'
+	from /Users/nicholas/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/net/http.rb:879:in `block in connect'
+	from /Users/nicholas/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/timeout.rb:74:in `timeout'
+	from /Users/nicholas/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/net/http.rb:878:in `connect'
+	from /Users/nicholas/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/net/http.rb:863:in `do_start'
+	from /Users/nicholas/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/net/http.rb:852:in `start'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient/request.rb:766:in `transmit'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient/request.rb:215:in `execute'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient/request.rb:52:in `execute'
+	from /Users/nicholas/.rvm/gems/ruby-2.2.2/gems/rest-client-2.0.0/lib/restclient.rb:71:in `post'
+	from ttucrawler.rb:28:in `get_course_by_class'
+	from ttucrawler.rb:8:in `go!'
+	from ttucrawler.rb:41:in `<main>'
+```
+
+看了一下log訊息後，再連去大同大學選課系統的網址，發現連不到了....，好吧，爬蟲進度就先停在這，回去練rails。

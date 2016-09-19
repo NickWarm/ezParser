@@ -12,15 +12,15 @@ class TTuCrawler
     binding.pry
     puts "-----tr_#{index}-----"
     tr.css("td").each_with_index do |td, y|
-      puts "----td_#{y} -----"
+      puts "---- #{y} -----"
       puts td.text()
     end
     # binding.pry
-    puts reg = tr.text().match(/(\w\d{4})([^\w]+)(.+)/)
+    # puts reg = tr.text().match(/(\w\d{4})([^\w]+)(.+)/)
 
   end
 
-    # ap doc
+    ap doc
   end
 
 
