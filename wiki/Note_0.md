@@ -14,27 +14,16 @@
 
 5. [Steven教的最初範例：爬ezprice](https://hackpad.com/Railsfun-0907-fzkwOww6RXq#:h=ezprice)
 
-
-#### 大量爬蟲練習
-
-
-
-
-
-
-
-
-
-
+6. [Steven的教材：爬大同大學的課表](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
 
 #### 串到rails
-7. [寫一隻Ruby 檔案定時抓爬網頁資料 - 丹哥的技術培養皿](http://tech.guojheng-lin.com/posts/2015/12/03/write-a-ruby-file-regularly-to-catch-crawling-web-page-data/)
 
-8. [Steven的教材：Railsfun 0907](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
+7. [Steven的教材：Railsfun 0907](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
+  + [寫一隻Ruby 檔案定時抓爬網頁資料 - 丹哥的技術培養皿](http://tech.guojheng-lin.com/posts/2015/12/03/write-a-ruby-file-regularly-to-catch-crawling-web-page-data/)
 
 
 
-##### Regular Expression推薦教材
+#### Regular Expression推薦教材
 
 > [Rubular](http://rubular.com/)
 
@@ -43,3 +32,10 @@
 > [Regex Crossword](https://regexcrossword.com/)
 
  推薦安裝Atom package: [regex-railroad-diagram](https://atom.io/packages/regex-railroad-diagram)
+
+
+# ToDos
+
+#### 大量爬蟲練習
+
+一些精選的爬蟲範例，準備拿來臨摹
