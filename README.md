@@ -4,9 +4,6 @@
 
 先前完全沒碰過爬蟲，會的Ruby也只有rails初學者堪用的程度，當天完全跟不上進度。
 
-[部落格版](http://nickwarm.logdown.com/posts/891192-railsfun-2016-9-7-reptile-study-notes)
-
-<br>
 以下是我為了學習爬蟲，依序臨摹的範例，程式碼在`examples`，筆記在`wiki`。
 
 1. [Nokogiri 教學、簡介 | 艾瑞克王](http://wwssllabcd.github.io/blog/2012/10/25/how-to-use-nokogiri/)
@@ -19,7 +16,8 @@
 
 5. [Steven教的最初範例：爬ezprice](https://hackpad.com/Railsfun-0907-fzkwOww6RXq#:h=ezprice)
 
-一樣[GitHub的wiki](https://github.com/NickWarm/ezParser/wiki)有教學。
+GitHub的[wiki有教學](https://github.com/NickWarm/ezParser/wiki)，一樣也有[部落格版](http://nickwarm.logdown.com/posts/891192-railsfun-2016-9-7-reptile-study-notes)。
+
 
 # 你可以從這專案得到
 
