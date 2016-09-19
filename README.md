@@ -16,8 +16,6 @@
 
 3. [第十一篇 - 第一次自幹爬蟲就上手 - 使用 Ruby  (Yukai Huang)](https://yukaii.tw/blog/2015/05/03/how-to-write-web-crawler-for-the-first-time-using-ruby/)
 
-  + [crawler-template: 一個爬蟲範本 ](https://github.com/Yukaii/crawler-template) (這個用看的就好了)
-
 4. [用 Ruby 做網頁爬蟲](http://mgleon08.github.io/blog/2016/02/07/ruby-crawler/)
 
 5. [Steven教的最初範例：爬ezprice](https://hackpad.com/Railsfun-0907-fzkwOww6RXq#:h=ezprice)
