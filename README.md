@@ -20,7 +20,7 @@
 
 5. [Steven教的最初範例：爬ezprice](https://hackpad.com/Railsfun-0907-fzkwOww6RXq#:h=ezprice)
 
-一樣[GitHub的wiki]()有教學。
+一樣[GitHub的wiki](https://github.com/NickWarm/ezParser/wiki)有教學。
 
 # 你可以從這專案得到
 
