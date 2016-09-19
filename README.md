@@ -1,11 +1,10 @@
 # RailsFun 2016/9/7 爬蟲學習筆記
 
-當天meetup筆記：[Railsfun 0907 - hackpad.com](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)
-
-感謝9/7當天三位講者的分享。
+[當天meetup筆記](https://hackpad.com/Railsfun-0907-fzkwOww6RXq)，感謝9/7當天三位講者的分享。
 
 先前完全沒碰過爬蟲，會的Ruby也只有rails初學者堪用的程度，當天完全跟不上進度。
 
+[部落格版](http://nickwarm.logdown.com/posts/891192-railsfun-2016-9-7-reptile-study-notes)
 
 <br>
 以下是我為了學習爬蟲，依序臨摹的範例，程式碼在`examples`，筆記在`wiki`。
